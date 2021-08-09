@@ -10,22 +10,24 @@
         "storage",
         "activeTab",
         "scripting",
-        "contextMenus"
+        "contextMenus",
+        "declarativeContent",
+        "tabs"
     ],
     "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "16": "/images/get_started16.png",
-            "32": "/images/get_started32.png",
-            "48": "/images/get_started48.png",
-            "128": "/images/get_started128.png"
+            "16": "/images/mc-16x16.png",
+            "32": "/images/mc-32x32.png",
+            "96": "/images/mc-96x96.png",
+            "192": "/images/mc-192x192.png"
         }
     },
     "icons": {
-        "16": "/images/get_started16.png",
-        "32": "/images/get_started32.png",
-        "48": "/images/get_started48.png",
-        "128": "/images/get_started128.png"
+        "16": "/images/mc-16x16.png",
+        "32": "/images/mc-32x32.png",
+        "96": "/images/mc-96x96.png",
+        "192": "/images/mc-192x192.png"
     },
     "options_page": "options.html"
 }

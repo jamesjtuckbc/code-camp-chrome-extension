@@ -1,42 +1,46 @@
-let color = '#3aa757';
-let connections = {};
+const siteReg = "([^/]+)(?=/[^/]+/?$)";
+const linkReg = "[^/]*$";
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.set({ color });
-    console.log('Default background color set to %cgreen', `color: ${color}`);
-    chrome.contextMenus.create({
-        "id": "gettingStarted",
-        "title": "Getting Started"
-    }, function () {
-        // add the children items in the callback function since we only want to create these if the parent item creation succeeds.
-        chrome.contextMenus.create({ title: 'Set Background Color', id: 'setBackgroundColor', parentId: 'gettingStarted' }, function () {
-            console.log('setBackgroundColor item added.');
-        });
-        chrome.contextMenus.create({ title: 'Console Log Click Data', id: 'consoleLogClickData', parentId: 'gettingStarted' }, function () {
-            console.log('consoleLogClickData item added.');
-        });
-    });
-
-    console.log('Adding item to context menu 2.')
+  chrome.contextMenus.create(
+    {
+      id: "modernCampus",
+      title: "Modern Campus",
+      contexts: ["all"],
+    },
+    function () {
+      chrome.contextMenus.create(
+        {
+          title: "Open Published Page",
+          id: "openPubPage",
+          parentId: "modernCampus",
+          contexts: ["link"],
+        },
+        function () {}
+      );
+    }
+  );
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-
-    if (info.menuItemId == 'setBackgroundColor') {
-        // do action 1
-        chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            function: setPageBackgroundColor,
-        });
-
-    } else if (info.menuItemId == 'consoleLogClickData') {
-        console.log(info, tab);
-    }
+  switch (info.menuItemId) {
+    case "openPubPage":
+      openPublishedPage(info.linkUrl);
+      break;
+  }
 });
 
-// The body of this function will be executed as a content script inside the current page
-function setPageBackgroundColor() {
-    chrome.storage.sync.get("color", ({ color }) => {
-        document.body.style.backgroundColor = color;
-    });
-}
+function openPublishedPage(linkUrl) {
+  console.log(linkUrl);
+  let site = linkUrl.match(siteReg)[0];
+  let link = linkUrl.match(linkReg)[0].replace("dispatch", "");
+  fetch(
+    `http://a.cms.omniupdate.com/files/published?site=${site}&path=${link}`
+  ).then((res) =>
+    res
+      .json()
+      .then((data) =>
+        chrome.tabs.create({ url: data.products[0].targets[0].url, active: false })
+      )
+  );
+};
