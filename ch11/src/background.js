@@ -37,10 +37,11 @@ function openPublishedPage(linkUrl) {
   fetch(
     `http://a.cms.omniupdate.com/files/published?site=${site}&path=${link}`
   ).then((res) =>
-    res
-      .json()
-      .then((data) =>
-        chrome.tabs.create({ url: data.products[0].targets[0].url, active: false })
-      )
+    res.json().then((data) => {
+      data.products.forEach((i) => {
+        console.log(i.targets[0].url);
+        chrome.tabs.create({ url: i.targets[0].url, active: false });
+      });
+    })
   );
-};
+}
